@@ -1,0 +1,32 @@
+[
+    {
+        "username": "Nexary",
+        "email": "nexaryhub@gmail.com",
+        "password": "Death Bed",
+        "verified": false,
+        "tester": false,
+        "bans": {
+            "upload_restriction": {
+                "reason": "Uso inapropiado del Chat: Objeto Ofensivo: Pendejo",
+                "duration": 1,
+                "start_time": "2025-03-05 17:14:50"
+            }
+        }
+    },
+    {
+        "username": "Carlos",
+        "email": "tofecajo@gmail.com",
+        "password": "OfimTec10",
+        "verified": true,
+        "tester": false,
+        "bans": {}
+    },
+    {
+        "username": "{{  7 * 7 }}",
+        "email": "djehshs@gmail.com",
+        "password": "ywywywywywyw",
+        "verified": false,
+        "tester": false,
+        "bans": {}
+    }
+]

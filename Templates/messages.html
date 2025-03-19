@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --surface-lighter: #2a3649;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --verified: #22c55e;  /* Verde */
+            --tester: #3b82f6;    /* Azul */
+            --delete: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--background) 0%, #1a237e 100%);
+        }
+
+        .container {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            color: var(--text);
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            letter-spacing: -0.025em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h1 i {
+            color: var(--primary);
+        }
+
+        .message {
+            background: var(--surface-lighter);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .username {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .verified-badge {
+            color: var(--verified);
+            font-size: 1rem;
+        }
+
+        .tester-badge {
+            color: var(--tester);
+            font-size: 1rem;
+        }
+
+        .message-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--delete);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .no-messages {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .no-messages i {
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.5;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.25rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 0.75rem;
+        }
+
+        .btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateX(4px);
+        }
+
+        .btn i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover i {
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .message {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <i class="fas fa-comments"></i>
+            Mensajes
+        </h1>
+        
+        <div id="messages-container">
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="message" data-id="{{ loop.index0 }}">
+                        <div class="username">
+                            {{ msg.username }}
+                            {% if msg.verified %}
+                            <i class="fas fa-check-circle verified-badge"></i>
+                            {% elif msg.tester %}
+                            <i class="fas fa-check-circle tester-badge"></i>
+                            {% endif %}
+                        </div>
+                        {% if msg.message %}
+                        <p class="message-text">{{ msg.message }}</p>
+                        {% endif %}
+                        {% if msg.file %}
+                        <div class="file-attachment" style="margin-top: 0.5rem;">
+                            {% if msg.file.name.endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                            <img src="/download/{{ msg.file.name }}" alt="{{ msg.file.name }}" style="max-width: 200px; border-radius: 0.5rem;">
+                            {% elif msg.file.name.endswith(('.mp4', '.webm', '.ogg')) %}
+                            <video controls style="max-width: 200px; border-radius: 0.5rem;">
+                                <source src="/download/{{ msg.file.name }}" type="video/{{ msg.file.name.split('.')[-1] }}">
+                            </video>
+                            {% else %}
+                            <a href="/download/{{ msg.file.name }}" style="color: var(--primary); text-decoration: none;">
+                                <i class="fas fa-file"></i> {{ msg.file.name }} ({{ msg.file.size }})
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% if username == msg.username or (verified and not msg.verified and not tester) %}
+                            <form action="/delete_message/{{ loop.index0 }}" method="POST" style="display: inline;">
+                                <button type="submit" class="delete-btn">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-messages">
+                    <i class="far fa-comment-dots"></i>
+                    <p>No hay mensajes disponibles</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <a href="/" class="btn">
+            <i class="fas fa-arrow-left"></i>
+            Volver al inicio
+        </a>
+    </div>
+
+    <script>
+        function addMessage(message) {
+            const messagesContainer = document.getElementById("messages-container");
+            const noMessagesDiv = messagesContainer.querySelector(".no-messages");
+
+            if (noMessagesDiv) {
+                messagesContainer.removeChild(noMessagesDiv);
+            }
+
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "message";
+            const messageIndex = messagesContainer.children.length;
+            messageDiv.setAttribute("data-id", messageIndex);
+            let fileHtml = '';
+            if (message.file) {
+                if (message.file.name.endsWith('.png') || message.file.name.endsWith('.jpg') || message.file.name.endsWith('.jpeg') || message.file.name.endsWith('.gif')) {
+                    fileHtml = `<div class="file-attachment" style="margin-top: 0.5rem;">
+                                    <img src="/download/${message.file.name}" alt="${message.file.name}" style="max-width: 200px; border-radius: 0.5rem;">
+                                </div>`;
+                } else if (message.file.name.endsWith('.mp4') || message.file.name.endsWith('.webm') || message.file.name.endsWith('.ogg')) {
+                    fileHtml = `<div class="file-attachment" style="margin-top: 0.5rem;">
+                                    <video controls style="max-width: 200px; border-radius: 0.5rem;">
+                                        <source src="/download/${message.file.name}" type="video/${message.file.name.split('.').pop()}">
+                                    </video>
+                                </div>`;
+                } else {
+                    fileHtml = `<div class="file-attachment" style="margin-top: 0.5rem;">
+                                    <a href="/download/${message.file.name}" style="color: var(--primary); text-decoration: none;">
+                                        <i class="fas fa-file"></i> ${message.file.name} (${message.file.size})
+                                    </a>
+                                </div>`;
+                }
+            }
+            messageDiv.innerHTML = `
+                <div class="username">
+                    ${message.username}
+                    ${message.verified ? '<i class="fas fa-check-circle verified-badge"></i>' : 
+                    message.tester ? '<i class="fas fa-check-circle tester-badge"></i>' : ''}
+                </div>
+                ${message.message ? `<p class="message-text">${message.message}</p>` : ''}
+                ${fileHtml}
+                ${message.username === "{{ username }}" || ("{{ verified }}" === "True" && !message.verified && "{{ tester }}" !== "True") ? 
+                    `<form action="/delete_message/${messageIndex}" method="POST" style="display: inline;">
+                        <button type="submit" class="delete-btn">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </form>` : ''}
+            `;
+            messagesContainer.appendChild(messageDiv);
+        }
+
+        function removeMessage(messageId) {
+            const messagesContainer = document.getElementById("messages-container");
+            const messageDiv = messagesContainer.querySelector(`.message[data-id="${messageId}"]`);
+            if (messageDiv) {
+                messageDiv.remove();
+                if (messagesContainer.children.length === 0) {
+                    messagesContainer.innerHTML = `
+                        <div class="no-messages">
+                            <i class="far fa-comment-dots"></i>
+                            <p>No hay mensajes disponibles</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        const eventSource = new EventSource("/stream_messages");
+        eventSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.action === "delete") {
+                removeMessage(data.id);
+            } else {
+                addMessage(data);
+            }
+        };
+    </script>
+</body>
+</html>
